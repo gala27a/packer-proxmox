@@ -1,2 +1,2 @@
-# packer-proxmox
-Build image OS with Packer on Proxmox
+# Build OS image with Packer on Proxmox
+
