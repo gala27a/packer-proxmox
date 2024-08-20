@@ -23,8 +23,8 @@ source "proxmox-iso" "Ubuntu-Server-24_04-Noble" {
   node = ""
 
   vm_name = "Ubuntu-Server-2404-Template"
-#  vm_id = 
-  template_description = "Ubuntu-server-24.04(Noble)"
+#  vm_id =
+  template_description = "Ubuntu-Server-24.04(Noble)"
   onboot = true
 
   iso_file = ""
@@ -77,8 +77,8 @@ source "proxmox-iso" "Ubuntu-Server-24_04-Noble" {
     "<enter><f10><wait>"    
   ]
 
-  ssh_username = ""
-  ssh_password = ""
+  ssh_username = "packer"
+  ssh_password = "P@ckerADM"
   ssh_port = 22
   ssh_timeout = "35m"  
 }
