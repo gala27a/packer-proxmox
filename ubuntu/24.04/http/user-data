@@ -5,6 +5,15 @@ autoinstall:
   keyboard:
     layout: us
 
+  refresh-installer:
+    update: yes
+  
+  source:
+    id: ubuntu-server
+    search_drivers: true
+
+  timezone: Europe/Warsaw
+    
   network:
     version: 2
     ethernets:
@@ -14,6 +23,8 @@ autoinstall:
   storege:
     layout:
       name: lvm
+    swap:
+      size: 0
     
   identity:
     hostname: ubuntu-2404-template
@@ -26,9 +37,13 @@ autoinstall:
     install-server: true
     allow-pw: true
     # authorized-keys: []
-    
+
+### Aktualizacja wszystkich pakietow --> Uwaga budowanie template trwa dluzej -- tylko security -> updates: security
+  updates: all  
+
   packages:
     - qemu-guest-agent
+    - vim
 
   late-commands:
     - echo "packer ALL=(ALL) NOPASSWD:ALL" > /target/etc/sudoers.d/packer
