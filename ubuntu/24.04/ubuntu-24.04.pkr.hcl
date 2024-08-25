@@ -15,19 +15,19 @@ packer {
 
 source "proxmox-iso" "Ubuntu-Server-24_04-Noble" {
 
-  proxmox_url = ""
+  proxmox_url = var.proxmox_url
   insecure_skip_tls_verify = true
-  username = ""
-  password = ""
+  username = var.proxmox_username
+  password = var.proxmox_password
 #  token = 
-  node = ""
+  node = var.proxmox_node
 
   vm_name = "Ubuntu-Server-2404-Template"
-#  vm_id =
+  vm_id = var.vm_id
   template_description = "Ubuntu-Server-24.04(Noble)"
   onboot = true
 
-  iso_file = ""
+  iso_file = var.iso_file
   unmount_iso = true
   os = "l26"
 
@@ -37,7 +37,7 @@ source "proxmox-iso" "Ubuntu-Server-24_04-Noble" {
     type = "scsi"
     format = "qcow2"
     disk_size = "15G"
-    storage_pool = ""
+    storage_pool = var.vm_storage_pool
   }
 
   cores = 2
@@ -93,4 +93,37 @@ build {
       "exit 0",
     ]
   }
+}
+
+
+##########################
+# Definition of Variables
+##########################
+
+variable "proxmox_url" {
+    type = string
+}
+
+variable "proxmox_username" {
+    type = string
+}
+
+variable "proxmox_password" {
+    type = string
+}
+
+variable "proxmox_node" {
+    type = string
+}
+
+variable "vm_id" {
+    type = number
+}
+
+variable "iso_file" {
+    type = string
+}
+
+variable "vm_storage_pool" {
+    type = string
 }
