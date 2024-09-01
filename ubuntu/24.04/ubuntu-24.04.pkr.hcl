@@ -22,9 +22,9 @@ source "proxmox-iso" "Ubuntu-Server-24_04-Noble" {
 #  token = 
   node = var.proxmox_node
 
-  vm_name = "Ubuntu-Server-2404-Template"
+  vm_name = var.vm_name
   vm_id = var.vm_id
-  template_description = "Ubuntu-Server-24.04(Noble)"
+  template_description = var.vm_template_description
   onboot = true
 
   iso_file = var.iso_file
@@ -36,14 +36,14 @@ source "proxmox-iso" "Ubuntu-Server-24_04-Noble" {
   disks {
     type = "scsi"
     format = "qcow2"
-    disk_size = "15G"
+    disk_size = var.vm_disk_size
     storage_pool = var.vm_storage_pool
   }
 
-  cores = 2
+  cores = var.vm_cores
   sockets = 1
   cpu_type = "host"
-  memory = 2048
+  memory = var.vm_memory
 
   network_adapters {
     model = "virtio"
@@ -77,8 +77,8 @@ source "proxmox-iso" "Ubuntu-Server-24_04-Noble" {
     "<enter><f10><wait>"    
   ]
 
-  ssh_username = "packer"
-  ssh_password = "P@ckerADM"
+  ssh_username = var.ssh_username
+  ssh_password = var.ssh_password
   ssh_port = 22
   ssh_timeout = "35m"  
 }
@@ -90,6 +90,9 @@ build {
     pause_before = "20s"
     inline = [
       "sleep 30",
+      "sudo apt update",
+      "sudo apt full-upgrade -y",
+      "sudo apt autoremove",
       "exit 0",
     ]
   }
@@ -101,29 +104,57 @@ build {
 ##########################
 
 variable "proxmox_url" {
-    type = string
+  type = string
 }
 
 variable "proxmox_username" {
-    type = string
+  type = string
 }
 
 variable "proxmox_password" {
-    type = string
+  type = string
 }
 
 variable "proxmox_node" {
-    type = string
+  type = string
+}
+
+variable "vm_name" {
+  type = string
 }
 
 variable "vm_id" {
-    type = number
+  type = number
+}
+
+variable "vm_template_description" {
+  type = string
 }
 
 variable "iso_file" {
-    type = string
+  type = string
+}
+
+variable "vm_disk_size" {
+  type = string
 }
 
 variable "vm_storage_pool" {
-    type = string
+  type = string
+}
+
+variable "vm_cores" {
+  type = number
+}
+
+variable "vm_memory" {
+  type = number
+}
+
+variable "ssh_username" {
+  type = string
+}
+
+variable "ssh_password" {
+  type = string
 }
