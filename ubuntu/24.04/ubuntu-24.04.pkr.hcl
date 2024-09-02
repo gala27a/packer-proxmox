@@ -80,7 +80,7 @@ source "proxmox-iso" "Ubuntu-Server-24_04-Noble" {
   ssh_username = var.ssh_username
   ssh_password = var.ssh_password
   ssh_port = 22
-  ssh_timeout = "35m"  
+  ssh_timeout = "25m"  
 }
 
 build {
@@ -88,11 +88,17 @@ build {
 
   provisioner "shell" {
     pause_before = "20s"
+    environment_vars = ["DEBIAN_FRONTEND=noninteractive"]
     inline = [
-      "sleep 30",
+      "sleep 20",
       "sudo apt update",
       "sudo apt full-upgrade -y",
       "sudo apt autoremove",
+#      "sudo localectl set-locale LC_TIME=en_GB.UTF-8",   ## time en_GB.UTF-8 -> 24h , en_US.UTF-8 AM/PM 12
+      "sudo truncate -s 0 /etc/machine-id",
+      "sudo rm -rf /etc/ssh/ssh_host_*",
+      "sudo sed -i 's/^GRUB_CMDLINE_LINUX_DEFAULT=\".*\"/GRUB_CMDLINE_LINUX_DEFAULT=\"ipv6.disable=1\"/' /etc/default/grub",
+      "sudo update-grub",
       "exit 0",
     ]
   }

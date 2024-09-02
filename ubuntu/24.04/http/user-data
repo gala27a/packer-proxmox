@@ -1,7 +1,7 @@
 #cloud-config
 autoinstall:
   version: 1
-  locale: en_US.UTF-8
+  locale: C.UTF-8    ### en_US.UTF-8 or en_GB.UTF-8
   keyboard:
     layout: us
 
@@ -17,8 +17,13 @@ autoinstall:
   network:
     version: 2
     ethernets:
-      ens18:
+      all-eth:
+        match:
+          name: "en*"
         dhcp4: true
+#    ethernets:
+#      ens18:
+#        dhcp4: true
 
   storege:
     layout:
