@@ -95,10 +95,9 @@ build {
       "sudo apt full-upgrade -y",
       "sudo apt autoremove",
 #      "sudo localectl set-locale LC_TIME=en_GB.UTF-8",   ## time en_GB.UTF-8 -> 24h , en_US.UTF-8 AM/PM 12
-      "sudo truncate -s 0 /etc/machine-id",
-      "sudo rm -rf /etc/ssh/ssh_host_*",
-      "sudo sed -i 's/^GRUB_CMDLINE_LINUX_DEFAULT=\".*\"/GRUB_CMDLINE_LINUX_DEFAULT=\"ipv6.disable=1\"/' /etc/default/grub",
-      "sudo update-grub",
+      "sudo truncate -s 0 /etc/machine-id",   ### Generate new machine-id on first boot
+      "sudo sed -i 's/^GRUB_CMDLINE_LINUX_DEFAULT=\".*\"/GRUB_CMDLINE_LINUX_DEFAULT=\"ipv6.disable=1\"/' /etc/default/grub",   ### Disable IPv6
+      "sudo update-grub",    ### Update grub for disable IPv6
       "exit 0",
     ]
   }

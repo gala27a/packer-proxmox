@@ -17,15 +17,15 @@ autoinstall:
   network:
     version: 2
     ethernets:
-      all-eth:
-        match:
-          name: "en*"
+      ens18:
         dhcp4: true
 #    ethernets:
-#      ens18:
+#      all-eth:
+#        match:
+#          name: "en*"
 #        dhcp4: true
 
-  storege:
+  storage:
     layout:
       name: lvm
     swap:
