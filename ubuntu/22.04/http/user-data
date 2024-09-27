@@ -1,0 +1,54 @@
+#cloud-config
+autoinstall:
+  version: 1
+  locale: C.UTF-8    ### en_US.UTF-8 or en_GB.UTF-8
+  keyboard:
+    layout: us
+
+  refresh-installer:
+    update: yes
+  
+  source:
+    id: ubuntu-server
+    search_drivers: true
+
+  timezone: Europe/Warsaw
+    
+  network:
+    version: 2
+    ethernets:
+      ens18:
+        dhcp4: true
+#    ethernets:
+#      all-eth:
+#        match:
+#          name: "en*"
+#        dhcp4: true
+
+  storage:
+    layout:
+      name: lvm
+    swap:
+      size: 0
+    
+  identity:
+    hostname: ubuntu-2204-template
+    username: packer
+    password: "$6$TNVbHafXRWU.Geku$oK65OtvmMThcxMwZKWesfDRc3APbJDse8GcIN0xF2O.EPJdfbZ6OCiywuUQhz.7aETxwa.UsAKT7Kv8gKyXcR/"
+    ## PASS: P@ckerADM
+    ## openssl passwd -6
+
+  ssh:
+    install-server: true
+    allow-pw: true
+    # authorized-keys: []
+
+### Aktualizacja wszystkich pakietow --> Uwaga budowanie template trwa dluzej -- tylko security -> updates: security
+  updates: all  
+
+  packages:
+    - qemu-guest-agent
+    - vim
+
+  late-commands:
+    - echo "packer ALL=(ALL) NOPASSWD:ALL" > /target/etc/sudoers.d/packer
