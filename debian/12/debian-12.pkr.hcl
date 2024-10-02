@@ -74,9 +74,20 @@ build {
 
   provisioner "shell" {
     pause_before = "20s"
-#    environment_vars = ["DEBIAN_FRONTEND=noninteractive"]
+    environment_vars = ["DEBIAN_FRONTEND=noninteractive"]
     inline = [
       "sleep 20",
+      "sudo apt update",
+      "sudo apt full-upgrade -y",
+      "sudo apt autoremove",
+      "sudo hostnamectl set-hostname debian-12-template",
+      "sudo sed -i 's/^127\\.0\\.1\\.1\\s\\+debian\\b/127.0.1.1 debian-12-template/g' /etc/hosts",
+      "sudo chmod 646 /etc/bash.bashrc",
+      "sudo echo \"alias ll='ls -alF'\" >> /etc/bash.bashrc",
+      "sudo chmod 644 /etc/bash.bashrc",
+      "sudo swapoff -a",
+      "sudo lvremove -f debian-vg/swap_1",
+      "sudo sed -i '/^\\/dev\\/mapper\\/debian--vg-swap_1/d' /etc/fstab",
       "exit 0",
     ]
   }
