@@ -6,7 +6,7 @@
 packer {
   required_plugins {
     proxmox = {
-      version = ">= 1.1.8"
+      version = ">= 1.2.1"
       source  = "github.com/hashicorp/proxmox"
     }
   }
@@ -22,15 +22,17 @@ source "proxmox-iso" "Ubuntu-Server-24_04-Noble" {
 #  token = 
   node = var.proxmox_node
 
-  vm_name = var.vm_name
+  vm_name = "${var.vm_name}-${local.build_date}"
   vm_id = var.vm_id
-  template_description = var.vm_template_description
+  template_description = "${var.vm_template_description}-Release(${local.build_iso_release})-${local.build_full_date}"
   onboot = true
 
-  iso_file = var.iso_file
-  unmount_iso = true
-  os = "l26"
+  boot_iso {
+    iso_file = var.iso_file
+    unmount = true
+  }
 
+  os = "l26"
   qemu_agent = true
   scsi_controller = "virtio-scsi-single"
   disks {
@@ -162,4 +164,10 @@ variable "ssh_username" {
 
 variable "ssh_password" {
   type = string
+}
+
+locals {
+  build_date = formatdate("DDMMYY", timestamp())
+  build_full_date = formatdate("DD.MM.YYYY", timestamp())
+  build_iso_release = regex("ubuntu-(\\d+\\.\\d+\\.\\d+)-.*\\.iso", var.iso_file)[0]
 }
