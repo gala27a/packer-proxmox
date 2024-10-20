@@ -6,7 +6,7 @@
 packer {
   required_plugins {
     proxmox = {
-      version = ">= 1.2.0"
+      version = ">= 1.2.1"
       source  = "github.com/hashicorp/proxmox"
     }
   }
@@ -22,9 +22,9 @@ source "proxmox-iso" "CentOS-7" {
 #  token = 
   node = var.proxmox_node
 
-  vm_name = var.vm_name
+  vm_name = "${var.vm_name}-${local.build_date}"
   vm_id = var.vm_id
-  template_description = var.vm_template_description
+  template_description = "${var.vm_template_description}-Release-${var.centos_release}(${local.build_iso_release})-${local.build_full_date}"
   onboot = true
 
   boot_iso {
@@ -74,7 +74,8 @@ build {
       "sleep 20",
       "sudo yum clean all",
       "sudo yum update -y",
-      "sudo package-cleanup --oldkernels --count=1 -y",  
+      "sudo package-cleanup --oldkernels --count=1 -y",
+      "sudo rm -rf /etc/ssh/ssh_host_*",  
       "exit 0",
     ]
   }
@@ -84,6 +85,12 @@ build {
 ##########################
 # Definition of Variables
 ##########################
+
+locals {
+  build_date = formatdate("DDMMYY", timestamp())
+  build_full_date = formatdate("DD.MM.YYYY", timestamp())
+  build_iso_release = regex("CentOS-7-x86_64-.*-(\\d{4})\\.iso", var.iso_file)[0]
+}
 
 variable "proxmox_url" {
   type = string
@@ -138,5 +145,9 @@ variable "ssh_username" {
 }
 
 variable "ssh_password" {
+  type = string
+}
+
+variable "centos_release" {
   type = string
 }

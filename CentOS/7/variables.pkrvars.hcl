@@ -9,6 +9,7 @@ proxmox_node = ""
 vm_name = "CentOS-7-Template"
 vm_id = 10200
 vm_template_description = "CentOS-7-Template"
+centos_release= "7.9"
 iso_file = ""
 vm_disk_size = "12G"
 vm_storage_pool = ""
