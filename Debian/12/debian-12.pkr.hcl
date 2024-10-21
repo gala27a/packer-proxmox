@@ -6,7 +6,7 @@
 packer {
   required_plugins {
     proxmox = {
-      version = ">= 1.2.0"
+      version = ">= 1.2.1"
       source  = "github.com/hashicorp/proxmox"
     }
   }
@@ -22,9 +22,9 @@ source "proxmox-iso" "Debian-12-Bookworm" {
 #  token = 
   node = var.proxmox_node
 
-  vm_name = var.vm_name
+  vm_name = "${var.vm_name}-${local.build_date}"
   vm_id = var.vm_id
-  template_description = var.vm_template_description
+  template_description = "${var.vm_template_description}-Release(${local.build_iso_release})-${local.build_full_date}"
   onboot = true
 
   boot_iso {
@@ -58,7 +58,7 @@ source "proxmox-iso" "Debian-12-Bookworm" {
   boot_command = [
      "<esc><wait>",
      "auto ",
-     "debconf/priority=critical ",
+#     "debconf/priority=critical ",
      "preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/preseed.cfg",
      "<enter><wait>"
   ]
@@ -85,9 +85,9 @@ build {
       "sudo chmod 646 /etc/bash.bashrc",
       "sudo echo \"alias ll='ls -alF'\" >> /etc/bash.bashrc",
       "sudo chmod 644 /etc/bash.bashrc",
-      "sudo swapoff -a",
-      "sudo lvremove -f debian-vg/swap_1",
-      "sudo sed -i '/^\\/dev\\/mapper\\/debian--vg-swap_1/d' /etc/fstab",
+      // "sudo swapoff -a",
+      // "sudo lvremove -f debian-vg/swap_1",
+      // "sudo sed -i '/^\\/dev\\/mapper\\/debian--vg-swap_1/d' /etc/fstab",
       "exit 0",
     ]
   }
@@ -97,6 +97,12 @@ build {
 ##########################
 # Definition of Variables
 ##########################
+
+locals {
+  build_date = formatdate("DDMMYY", timestamp())
+  build_full_date = formatdate("DD.MM.YYYY", timestamp())
+  build_iso_release = regex("debian-(\\d+\\.\\d+\\.\\d+)-.*\\.iso", var.iso_file)[0]
+}
 
 variable "proxmox_url" {
   type = string
