@@ -22,9 +22,9 @@ source "proxmox-iso" "Ubuntu-Server-22_04-Jammy" {
 #  token = 
   node = var.proxmox_node
 
-  vm_name = var.vm_name
+  vm_name = "${var.vm_name}-${local.build_date}"
   vm_id = var.vm_id
-  template_description = var.vm_template_description
+  template_description = "${var.vm_template_description}-Release(${local.build_iso_release})-${local.build_full_date}"
   onboot = true
 
   boot_iso {
@@ -104,6 +104,18 @@ build {
       "exit 0",
     ]
   }
+  provisioner "file" {
+    source = "file/regenerate_ssh_host_keys.service"
+    destination = "/tmp/"
+  }
+  provisioner "shell" {
+    inline = [
+      "sudo mv /tmp/regenerate_ssh_host_keys.service /etc/systemd/system/",
+      "sudo systemctl daemon-reload",
+      "sudo systemctl enable regenerate_ssh_host_keys.service",
+      "exit 0",
+    ]    
+  }
 }
 
 
@@ -165,4 +177,10 @@ variable "ssh_username" {
 
 variable "ssh_password" {
   type = string
+}
+
+locals {
+  build_date = formatdate("DDMMYY", timestamp())
+  build_full_date = formatdate("DD.MM.YYYY", timestamp())
+  build_iso_release = regex("ubuntu-(\\d+\\.\\d+\\.\\d+)-.*\\.iso", var.iso_file)[0]
 }

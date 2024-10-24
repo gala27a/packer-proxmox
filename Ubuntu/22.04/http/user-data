@@ -25,9 +25,75 @@ autoinstall:
 #          name: "en*"
 #        dhcp4: true
 
+### Automate config storage
+#  storage:
+#    layout:
+#      name: lvm
+#    swap:
+#      size: 0
+
+### Manual set storage
   storage:
-    layout:
-      name: lvm
+    version: 1
+    config:
+      - id: disk-sda
+        type: disk
+        ptable: gpt
+        preserve: false
+        wipe: superblock-recursive
+        path: /dev/sda
+        grub_device: true
+        name: disk-sda
+      - id: partition-0
+        type: partition
+        number: 1
+        flag: bios_grub
+        device: disk-sda
+        size: 2M            
+        preserve: false
+        grub_device: false        
+      - id: partition-boot
+        type: partition
+        number: 2
+        flag: boot
+        device: disk-sda
+        size: 1500M     
+        grub_device: false
+      - id: filesystem-boot
+        type: format
+        fstype: ext4
+        volume: partition-boot
+        preserve: false
+      - id: mount_boot
+        type: mount
+        path: /boot
+        device: filesystem-boot
+      - id: partition-lvm
+        type: partition
+        number: 3
+        flag: ''
+        device: disk-sda
+        size: -1
+        wipe: superblock 
+        grub_device: false                   
+      - id: lvm-vg-root
+        type: lvm_volgroup
+        name: vg_root
+        devices:
+          - partition-lvm
+      - id: lvm-lv-root
+        type: lvm_partition
+        volgroup: lvm-vg-root
+        name: lv_root
+        size: 80%  #-1
+      - id: filesystem-root
+        type: format  
+        fstype: ext4
+        volume: lvm-lv-root
+      - id: mount_root
+        type: mount
+        path: /
+        device: filesystem-root
     swap:
       size: 0
     
@@ -49,6 +115,13 @@ autoinstall:
   packages:
     - qemu-guest-agent
     - vim
+    - wget
+    - curl
+    - tmux
+    - htop
+    - mc
+    - apt-transport-https
+    - git
 
   late-commands:
     - echo "packer ALL=(ALL) NOPASSWD:ALL" > /target/etc/sudoers.d/packer
