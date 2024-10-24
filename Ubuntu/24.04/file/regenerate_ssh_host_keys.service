@@ -1,0 +1,12 @@
+[Unit]
+Description=OpenSSH Server Host Key Generation - Regenerate on first boot
+Before=ssh.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/sbin/dpkg-reconfigure openssh-server
+ExecStartPost=/bin/systemctl disable regenerate_ssh_host_keys
+RemainAfterExit=true
+
+[Install]
+WantedBy=multi-user.target

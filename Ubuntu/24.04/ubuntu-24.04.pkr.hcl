@@ -100,10 +100,24 @@ build {
       "sudo truncate -s 0 /etc/machine-id",   ### Generate new machine-id on first boot
       "sudo sed -i 's/^GRUB_CMDLINE_LINUX_DEFAULT=\".*\"/GRUB_CMDLINE_LINUX_DEFAULT=\"ipv6.disable=1\"/' /etc/default/grub",   ### Disable IPv6
       "sudo update-grub",    ### Update grub for disable IPv6
+      "sudo rm -rfv /etc/ssh/ssh_host*",
+      "exit 0",
+    ]
+  }
+  provisioner "file" {
+    source = "file/regenerate_ssh_host_keys.service"
+    destination = "/tmp/"
+  }
+  provisioner "shell" {
+    inline = [
+      "sudo mv /tmp/regenerate_ssh_host_keys.service /etc/systemd/system/",
+      "sudo systemctl daemon-reload",
+      "sudo systemctl enable regenerate_ssh_host_keys.service",
       "exit 0",
     ]
   }
 }
+
 
 
 ##########################
