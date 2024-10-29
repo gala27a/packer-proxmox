@@ -72,6 +72,12 @@ source "proxmox-iso" "Debian-11-Bullseye" {
 build {
   sources = ["proxmox-iso.Debian-11-Bullseye"]
 
+  provisioner "file" {
+    pause_before = "15s"
+    source = "file/regenerate_ssh_host_keys.service"
+    destination = "/tmp/"
+  }
+
   provisioner "shell" {
     pause_before = "20s"
     environment_vars = ["DEBIAN_FRONTEND=noninteractive"]
@@ -88,6 +94,12 @@ build {
       // "sudo swapoff -a",
       // "sudo lvremove -f debian-vg/swap_1",
       // "sudo sed -i '/^\\/dev\\/mapper\\/debian--vg-swap_1/d' /etc/fstab",
+      "sudo sed -i 's/quiet//g' /etc/default/grub",
+      "sudo update-grub",
+      "sudo rm -rfv /etc/ssh/ssh_host*",      
+      "sudo mv /tmp/regenerate_ssh_host_keys.service /etc/systemd/system/",
+      "sudo systemctl daemon-reload",
+      "sudo systemctl enable regenerate_ssh_host_keys.service",     
       "exit 0",
     ]
   }
