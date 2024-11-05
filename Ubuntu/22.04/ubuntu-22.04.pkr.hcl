@@ -100,6 +100,8 @@ build {
 #      "sudo localectl set-locale LC_TIME=en_GB.UTF-8",   ## time en_GB.UTF-8 -> 24h , en_US.UTF-8 AM/PM 12
       "sudo truncate -s 0 /etc/machine-id",   ### Generate new machine-id on first boot
       "sudo sed -i 's/^GRUB_CMDLINE_LINUX_DEFAULT=\".*\"/GRUB_CMDLINE_LINUX_DEFAULT=\"ipv6.disable=1\"/' /etc/default/grub",   ### Disable IPv6
+      "sudo sed -i 's/^%sudo.*/%sudo   ALL=(ALL:ALL) NOPASSWD: ALL/' /etc/sudoers",
+      "sudo echo 'network: {config: disabled}' | sudo tee /etc/cloud/cloud.cfg.d/99-disable-network-config.cfg",
       "sudo update-grub",    ### Update grub for disable IPv6
       "exit 0",
     ]
@@ -113,6 +115,8 @@ build {
       "sudo mv /tmp/regenerate_ssh_host_keys.service /etc/systemd/system/",
       "sudo systemctl daemon-reload",
       "sudo systemctl enable regenerate_ssh_host_keys.service",
+      "sudo systemctl enable ssh",
+      "sudo systemctl disable ssh.socket",
       "exit 0",
     ]    
   }
