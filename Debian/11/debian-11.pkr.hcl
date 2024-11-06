@@ -94,6 +94,7 @@ build {
       // "sudo swapoff -a",
       // "sudo lvremove -f debian-vg/swap_1",
       // "sudo sed -i '/^\\/dev\\/mapper\\/debian--vg-swap_1/d' /etc/fstab",
+      "sudo sed -i 's/^%sudo.*/%sudo   ALL=(ALL:ALL) NOPASSWD: ALL/' /etc/sudoers",
       "sudo sed -i 's/quiet//g' /etc/default/grub",
       "sudo update-grub",
       "sudo rm -rfv /etc/ssh/ssh_host*",      
