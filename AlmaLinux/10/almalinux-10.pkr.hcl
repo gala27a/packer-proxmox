@@ -6,7 +6,7 @@
 packer {
   required_plugins {
     proxmox = {
-      version = "1.2.1"
+      version = "1.2.3"
       source  = "github.com/hashicorp/proxmox"
     }
   }
@@ -59,26 +59,11 @@ source "proxmox-iso" "AlmaLinux-10" {
     "<up><up>",
     "e",
     "<down><down>",
-    "<del><del><del><del><del><del><del><del>",
-    "<del><del><del><del><del><del><del><del>",
-    "<del><del><del><del><del><del><del><del>",
-    "<del><del><del><del><del><del><del><del>",
-    "<del><del><del><del><del><del><del><del>",
-    "<del><del><del><del><del><del><del><del>",
-    "<del><del><del><del><del><del><del><del>",
-    "<del><del><del><del><del><del><del><del>",
-    "<del><del><del><del><del><del><del><del>",
-    "<del><del><del><del><del><del><del><del>",
-    "<del><del><del><del><del><del>",
-    "<spacebar>",
-    "linux /images/pxeboot/vmlinuz",
+    "<leftCtrlOn>e<leftCtrlOff>",
     "<spacebar>",
     "inst.text",
     "<spacebar>",
     "inst.ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks.cfg",
-    "<spacebar>",
-    "quiet",
-    "<spacebar>",
     "<leftCtrlOn>x<leftCtrlOff>",
   ]
 
